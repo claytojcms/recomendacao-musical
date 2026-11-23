@@ -31,7 +31,7 @@ O problema envolve conexões: usuários escutam e curtem músicas, seguem artist
 | `Artista` | `INTERPRETA` | `Musica` |
 | `Musica` | `PERTENCE_A` | `Genero` |
 
-Veja o diagrama em [`docs/modelo-grafo.mmd`](docs/modelo-grafo.mmd).
+Veja o diagrama em "recomendacao-musical graph.png".
 
 No Neo4j Browser, o esquema também pode ser visualizado com:
 
@@ -55,9 +55,6 @@ Propriedades de áudio usadas anteriormente no projeto incluem `energy`, `dancea
 4. Execute `cypher/02-demo-interactions.cypher` para criar três usuários demonstrativos e suas interações.
 5. Execute `cypher/03-recommendations.cypher` para consultar recomendações.
 6. Altere o parâmetro `userId` para testar outro usuário.
-7. Execute as consultas de negócio em `cypher/04-business-queries.cypher`.
-
-> Os três usuários e suas interações são dados de demonstração, não registros reais de ouvintes. Para usar interações reais, substitua os exemplos por dados coletados legitimamente.
 
 ## 6. Algoritmo de recomendação
 
@@ -94,29 +91,10 @@ O usuário-alvo precisa ter pelo menos uma interação em comum com outro usuár
 ### Mais relacionamentos do que o esperado
 Evite `CONTAINS` para selecionar artistas quando deseja um artista específico. Prefira localizar o artista pelo relacionamento com a música ou por uma propriedade exata. `MERGE` evita duplicar a mesma relação quando o padrão completo já existe.
 
-## 9. Evidências visuais
-
-Adicione capturas de tela do seu próprio Neo4j Browser/Explore em `evidencias/`:
-
-- `01-modelo.png`: resultado de `CALL db.schema.visualization();`
-- `02-grafo.png`: usuários, músicas, artistas e gêneros conectados.
-- `03-recomendacoes.png`: resultado da consulta principal.
-- `04-consultas.png`: resultados de consultas de negócio.
-
-As imagens devem ser capturadas no seu banco, para representar fielmente a execução do projeto.
-
-## 10. Limitações e melhorias futuras
+## 9. Limitações e melhorias futuras
 
 - O resultado depende da quantidade e qualidade das interações disponíveis.
 - Os usuários atuais são demonstrativos.
 - Os relacionamentos `ESCUTOU` e `CURTIU` representam a existência de uma interação; o modelo pode ser expandido com data, quantidade de reproduções ou duração ouvida.
 - Melhorias possíveis: normalização da similaridade (Jaccard), janela temporal, avaliação de precisão/recall e combinação com características de áudio e gênero.
 
-## 11. Tecnologias
-
-- Neo4j AuraDB
-- Cypher
-- Spotify Tracks Dataset
-
----
-Projeto prático de recomendação musical com banco de dados em grafos.
