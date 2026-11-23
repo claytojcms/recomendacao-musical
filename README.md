@@ -68,16 +68,7 @@ O algoritmo exclui músicas que o usuário-alvo já escutou ou curtiu. As recome
 
 Os pesos são heurísticos e podem ser ajustados conforme os resultados observados. Com poucos usuários e poucas interações, o resultado serve como demonstração do método, não como avaliação estatística de qualidade em produção.
 
-## 7. Perguntas de negócio respondidas
-
-- Quais músicas podem ser recomendadas para determinado usuário?
-- Quais usuários possuem gostos musicais semelhantes?
-- Quais músicas são mais curtidas?
-- Quais artistas são mais seguidos?
-- Quais gêneros aparecem no catálogo?
-- Quais músicas um usuário já escutou ou curtiu?
-
-## 8. Troubleshooting
+## 7. Troubleshooting
 
 ### Propriedade de artista aparece como `null`
 No modelo importado, o nome do artista está na propriedade `artists` do nó `Artista`, não necessariamente no nó `Musica`. Para exibir o artista, percorra `(Artista)-[:INTERPRETA]->(Musica)`.
@@ -91,7 +82,7 @@ O usuário-alvo precisa ter pelo menos uma interação em comum com outro usuár
 ### Mais relacionamentos do que o esperado
 Evite `CONTAINS` para selecionar artistas quando deseja um artista específico. Prefira localizar o artista pelo relacionamento com a música ou por uma propriedade exata. `MERGE` evita duplicar a mesma relação quando o padrão completo já existe.
 
-## 9. Limitações e melhorias futuras
+## 8. Limitações e melhorias futuras
 
 - O resultado depende da quantidade e qualidade das interações disponíveis.
 - Os usuários atuais são demonstrativos.
