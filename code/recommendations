@@ -1,3 +1,7 @@
+// RECOMENDAÇÃO COLABORATIVA PERSONALIZADA
+// No Neo4j Browser, defina o usuário-alvo antes de executar:
+// :param userId => 'U002'
+
 MATCH (alvo:Usuario {user_id: $userId})
 
 CALL {
