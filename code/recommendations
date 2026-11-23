@@ -1,0 +1,47 @@
+MATCH (alvo:Usuario {user_id: $userId})
+
+CALL {
+  WITH alvo
+  MATCH (alvo)-[:CURTIU]->(comum:Musica)<-[:CURTIU]-(similar:Usuario)
+  WHERE similar <> alvo
+  WITH alvo, similar, count(DISTINCT comum) AS curtidas_em_comum
+  OPTIONAL MATCH (alvo)-[:ESCUTOU]->(ouvida:Musica)<-[:ESCUTOU]-(similar)
+  WITH similar, curtidas_em_comum, count(DISTINCT ouvida) AS escutas_em_comum
+  RETURN
+    similar,
+    (curtidas_em_comum * 2 + escutas_em_comum) AS similaridade
+}
+
+MATCH (similar)-[interacao:CURTIU|ESCUTOU]->(candidata:Musica)
+WHERE NOT (alvo)-[:CURTIU|ESCUTOU]->(candidata)
+
+WITH alvo, candidata,
+     sum(
+       similaridade *
+       CASE type(interacao)
+         WHEN "CURTIU" THEN 3
+         ELSE 1
+       END
+     ) AS pontuacao_colaborativa,
+     collect(DISTINCT similar.nome) AS usuarios_semelhantes
+
+CALL {
+  WITH alvo, candidata
+  OPTIONAL MATCH (alvo)-[:SEGUE]->(artista:Artista)-[:INTERPRETA]->(candidata)
+  RETURN count(DISTINCT artista) AS artistas_seguidos
+}
+
+OPTIONAL MATCH (artistaMusica:Artista)-[:INTERPRETA]->(candidata)
+OPTIONAL MATCH (candidata)-[:PERTENCE_A]->(genero:Genero)
+
+RETURN
+  alvo.nome AS usuario,
+  candidata.track_name AS musica_recomendada,
+  collect(DISTINCT artistaMusica.artists) AS artistas,
+  collect(DISTINCT genero.track_genre) AS generos,
+  usuarios_semelhantes,
+  pontuacao_colaborativa,
+  artistas_seguidos,
+  round((pontuacao_colaborativa + artistas_seguidos * 1.5) * 100) / 100.0 AS pontuacao_final
+ORDER BY pontuacao_final DESC
+LIMIT 10;
