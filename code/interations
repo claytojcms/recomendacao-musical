@@ -1,0 +1,37 @@
+UNWIND [
+  {id: "U001", nome: "João"},
+  {id: "U002", nome: "Maria"},
+  {id: "U003", nome: "Pedro"}
+] AS dados
+MERGE (u:Usuario {user_id: dados.id})
+SET u.nome = dados.nome;
+
+
+MATCH (joao:Usuario {user_id: "U001"})
+MATCH (maria:Usuario {user_id: "U002"})
+MATCH (pedro:Usuario {user_id: "U003"})
+MATCH (blinding:Musica {track_id: "0VjIjW4GlUZAMYd2vXMi3b"})
+MATCH (starboy:Musica {track_id: "7MXVkk9YMctZqd1Srtv4MB"})
+
+
+MERGE (joao)-[:ESCUTOU]->(blinding)
+MERGE (joao)-[:ESCUTOU]->(starboy)
+MERGE (maria)-[:ESCUTOU]->(blinding)
+MERGE (pedro)-[:ESCUTOU]->(starboy)
+
+
+MERGE (joao)-[:CURTIU]->(blinding)
+MERGE (joao)-[:CURTIU]->(starboy)
+MERGE (maria)-[:CURTIU]->(blinding)
+MERGE (pedro)-[:CURTIU]->(starboy);
+
+
+MATCH (blindingArtist:Artista)-[:INTERPRETA]->(:Musica {track_id: "0VjIjW4GlUZAMYd2vXMi3b"})
+MATCH (starboyArtist:Artista)-[:INTERPRETA]->(:Musica {track_id: "7MXVkk9YMctZqd1Srtv4MB"})
+MATCH (joao:Usuario {user_id: "U001"})
+MATCH (maria:Usuario {user_id: "U002"})
+MATCH (pedro:Usuario {user_id: "U003"})
+MERGE (joao)-[:SEGUE]->(blindingArtist)
+MERGE (joao)-[:SEGUE]->(starboyArtist)
+MERGE (maria)-[:SEGUE]->(blindingArtist)
+MERGE (pedro)-[:SEGUE]->(starboyArtist);
