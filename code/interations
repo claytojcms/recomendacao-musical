@@ -1,3 +1,5 @@
+// DADOS DEMONSTRATIVOS
+// Cria três usuários. MERGE permite executar o script mais de uma vez sem duplicar nós.
 UNWIND [
   {id: "U001", nome: "João"},
   {id: "U002", nome: "Maria"},
@@ -6,26 +8,26 @@ UNWIND [
 MERGE (u:Usuario {user_id: dados.id})
 SET u.nome = dados.nome;
 
-
+// Localiza duas músicas já existentes no catálogo.
 MATCH (joao:Usuario {user_id: "U001"})
 MATCH (maria:Usuario {user_id: "U002"})
 MATCH (pedro:Usuario {user_id: "U003"})
 MATCH (blinding:Musica {track_id: "0VjIjW4GlUZAMYd2vXMi3b"})
 MATCH (starboy:Musica {track_id: "7MXVkk9YMctZqd1Srtv4MB"})
 
-
+// Registra escutas demonstrativas.
 MERGE (joao)-[:ESCUTOU]->(blinding)
 MERGE (joao)-[:ESCUTOU]->(starboy)
 MERGE (maria)-[:ESCUTOU]->(blinding)
 MERGE (pedro)-[:ESCUTOU]->(starboy)
 
-
+// Registra curtidas demonstrativas.
 MERGE (joao)-[:CURTIU]->(blinding)
 MERGE (joao)-[:CURTIU]->(starboy)
 MERGE (maria)-[:CURTIU]->(blinding)
 MERGE (pedro)-[:CURTIU]->(starboy);
 
-
+// Cada artista é localizado por sua relação com a música, evitando busca ampla por CONTAINS.
 MATCH (blindingArtist:Artista)-[:INTERPRETA]->(:Musica {track_id: "0VjIjW4GlUZAMYd2vXMi3b"})
 MATCH (starboyArtist:Artista)-[:INTERPRETA]->(:Musica {track_id: "7MXVkk9YMctZqd1Srtv4MB"})
 MATCH (joao:Usuario {user_id: "U001"})
