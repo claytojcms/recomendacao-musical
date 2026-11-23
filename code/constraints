@@ -1,0 +1,4 @@
+// Criando usuarios para testar o algoritmo de recomendação, onde cada usuario tem um id unico
+CREATE CONSTRAINT usuario_id_unico IF NOT EXISTS
+FOR (u:Usuario)
+REQUIRE u.user_id IS UNIQUE;
